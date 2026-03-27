@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Registro EDR — Caribe Cambia Tu Energía</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --green-50:#EAF3DE;--green-100:#C0DD97;--green-600:#3B6D11;--green-700:#27500A;
+    --teal-50:#E1F5EE;--teal-400:#1D9E75;--teal-600:#0F6E56;
+    --blue-50:#E6F1FB;--blue-400:#378ADD;--blue-600:#185FA5;
+    --amber-50:#FAEEDA;--amber-400:#EF9F27;--amber-600:#854F0B;
+    --red-50:#FCEBEB;--red-400:#E24B4A;--red-600:#A32D2D;
+    --purple-50:#EEEDFE;--purple-600:#534AB7;
+    --gray-100:#D3D1C7;--gray-400:#888780;--gray-600:#5F5E5A;
+    --text:#1a1a1a;--text-muted:#5a5a5a;--text-hint:#8a8a8a;
+    --bg:#ffffff;--bg-secondary:#f7f6f2;--bg-page:#f0ede6;
+    --border:rgba(0,0,0,0.12);--border-strong:rgba(0,0,0,0.22);
+    --radius:10px;--radius-lg:14px;
+    --font:-apple-system,'Helvetica Neue',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg-page);font-family:var(--font);color:var(--text);min-height:100vh;}
+
+  .topbar{background:var(--green-600);color:white;padding:12px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .topbar-icon{width:32px;height:32px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+  .topbar-title{font-size:14px;font-weight:600;}
+  .topbar-sub{font-size:11px;opacity:0.8;}
+  .topbar-id{font-family:monospace;font-size:12px;background:rgba(255,255,255,0.15);padding:4px 8px;border-radius:6px;}
+  .progress-bar{background:rgba(255,255,255,0.3);height:3px;}
+  .progress-fill{height:100%;background:var(--green-100);transition:width 0.4s ease;width:0%;}
+
+  .main{padding:12px 12px 120px;max-width:600px;margin:0 auto;}
+
+  .card{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border);margin-bottom:12px;overflow:hidden;}
+  .card-header{padding:12px 14px 10px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .card-num{width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .n-blue{background:var(--blue-50);color:var(--blue-600);}
+  .n-green{background:var(--green-50);color:var(--green-600);}
+  .n-purple{background:var(--purple-50);color:var(--purple-600);}
+  .n-amber{background:var(--amber-50);color:var(--amber-600);}
+  .n-teal{background:var(--teal-50);color:var(--teal-600);}
+  .n-red{background:var(--red-50);color:var(--red-600);}
+  .card-title{font-size:13px;font-weight:600;color:var(--text);}
+  .card-body{padding:14px;}
+
+  .qr-zone{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
+  .qr-visual{width:90px;height:90px;border:1.5px solid var(--border-strong);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;background:white;flex-shrink:0;overflow:hidden;}
+  .qr-visual canvas, .qr-visual img{width:90px!important;height:90px!important;}
+  .qr-placeholder{display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .qr-placeholder svg{width:28px;height:28px;opacity:0.3;}
+  .qr-placeholder span{font-size:9px;color:var(--text-hint);}
+  .qr-data{flex:1;min-width:0;}
+  .qr-code{font-family:monospace;font-size:16px;font-weight:700;color:var(--text);}
+  .qr-url{font-family:monospace;font-size:10px;color:var(--blue-600);word-break:break-all;margin-top:3px;}
+  .qr-ref{display:inline-block;margin-top:6px;background:var(--green-50);color:var(--green-600);font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;font-family:monospace;}
+  .btn-qr-print{margin-top:8px;font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;border:0.5px solid var(--blue-400);background:var(--blue-50);color:var(--blue-600);cursor:pointer;font-family:var(--font);}
+
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+  .field-grid.g1{grid-template-columns:1fr;}
+  .field-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:0.03em;}
+  .req{color:var(--red-600);}
+  input[type=text],input[type=number],input[type=tel],input[type=date],
+  input[type=datetime-local],select,textarea{
+    font-family:var(--font);font-size:14px;width:100%;
+    background:var(--bg-secondary);border:0.5px solid var(--border-strong);
+    border-radius:var(--radius);padding:10px 12px;color:var(--text);
+    -webkit-appearance:none;appearance:none;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal-400);background:white;}
+  textarea{min-height:72px;resize:vertical;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+
+  .status-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .status-btn{border:1.5px solid var(--border-strong);border-radius:var(--radius);padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.15s;background:var(--bg-secondary);}
+  .status-btn .st-icon{font-size:18px;display:block;margin-bottom:3px;}
+  .status-btn .st-label{font-size:12px;font-weight:600;display:block;}
+  .status-btn .st-sub{font-size:10px;color:var(--text-hint);}
+  .status-btn.sel-good{border-color:var(--teal-400);background:var(--teal-50);}
+  .status-btn.sel-warn{border-color:var(--amber-400);background:var(--amber-50);}
+  .status-btn.sel-bad{border-color:var(--red-400);background:var(--red-50);}
+
+  .photos-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .photos-hint{font-size:11px;color:var(--text-hint);}
+  .photo-counter{font-size:11px;font-weight:600;padding:2px 8px;border-radius:5px;}
+  .pc-ok{background:var(--teal-50);color:var(--teal-600);}
+  .pc-warn{background:var(--amber-50);color:var(--amber-600);}
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .photo-slot{aspect-ratio:4/3;border-radius:var(--radius);border:1.5px dashed var(--border-strong);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;position:relative;overflow:hidden;background:var(--bg-secondary);}
+  .photo-slot.obl{border-color:#d0a0a0;}
+  .photo-slot.filled{border-style:solid;border-color:var(--teal-400);}
+  .photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .photo-slot-lbl{font-size:9px;color:var(--text-hint);text-align:center;padding:0 4px;line-height:1.3;z-index:1;}
+  .photo-slot-req{font-size:9px;color:var(--red-600);font-weight:600;z-index:1;}
+  .photo-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.55);color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2;line-height:1;}
+  .photo-slot.filled .photo-del{display:flex;}
+  .photo-note{font-size:11px;color:var(--text-hint);margin-top:8px;padding:8px 10px;background:var(--bg-secondary);border-radius:var(--radius);border-left:2px solid var(--teal-400);line-height:1.5;}
+  input[type=file]{display:none;}
+
+  .custody-step{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);}
+  .custody-step:last-child{border-bottom:none;}
+  .c-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+  .d-green{background:var(--teal-400);}
+  .d-amber{background:var(--amber-400);}
+  .d-blue{background:var(--blue-400);}
+  .c-info{flex:1;}
+  .c-stage{font-size:12px;font-weight:600;}
+  .c-detail{font-size:10px;color:var(--text-hint);margin-bottom:6px;}
+  .c-inputs{display:flex;flex-direction:column;gap:5px;}
+  .c-inputs input{font-size:12px;padding:7px 10px;}
+
+  .summary-card{background:var(--green-50);border:0.5px solid var(--green-100);border-radius:var(--radius-lg);padding:14px;margin-bottom:12px;}
+  .summary-title{font-size:11px;font-weight:700;color:var(--green-600);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;}
+  .sum-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--green-100);}
+  .sum-row:last-child{border-bottom:none;}
+  .sum-key{font-size:12px;color:var(--text-muted);}
+  .sum-val{font-size:12px;font-weight:600;color:var(--text);}
+
+  .action-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:0.5px solid var(--border);padding:10px 16px;display:flex;gap:8px;justify-content:flex-end;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,0.08);}
+  .btn{font-family:var(--font);font-size:13px;font-weight:600;padding:10px 16px;border-radius:var(--radius);border:none;cursor:pointer;transition:all 0.15s;}
+  .btn-save{background:var(--green-600);color:white;flex:1;max-width:200px;}
+  .btn-save:disabled{background:var(--gray-400);cursor:not-allowed;}
+  .btn-save:active:not(:disabled){background:var(--green-700);transform:scale(0.98);}
+  .btn-new{background:var(--bg-secondary);color:var(--text-muted);border:0.5px solid var(--border-strong)!important;}
+
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);font-size:13px;font-weight:500;padding:10px 18px;border-radius:20px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:200;white-space:nowrap;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast-ok{background:#1a1a1a;color:white;}
+  .toast-err{background:var(--red-600);color:white;}
+
+  .divider{height:0.5px;background:var(--border);margin:12px 0;}
+  .sending-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.85);display:none;align-items:center;justify-content:center;z-index:300;flex-direction:column;gap:12px;}
+  .sending-overlay.show{display:flex;}
+  .spinner{width:36px;height:36px;border:3px solid var(--green-100);border-top-color:var(--green-600);border-radius:50%;animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .sending-text{font-size:14px;font-weight:600;color:var(--green-600);}
+
+  /* QR Print */
+  @media print{
+    body *{visibility:hidden;}
+    #qr-print-area,#qr-print-area *{visibility:visible;}
+    #qr-print-area{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  }
+
+  @media(max-width:360px){
+    .field-grid{grid-template-columns:1fr;}
+    .photo-grid{grid-template-columns:repeat(2,1fr);}
+    .status-row{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <div>
+      <div class="topbar-title">Registro EDR</div>
+      <div class="topbar-sub">Caribe Cambia Tu Energía · Air-e</div>
+    </div>
+  </div>
+  <div class="topbar-id" id="top-id">EDR-2025-000001</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<div class="main">
+
+  <!-- 1. Identificación -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num n-blue">1</div>
+      <div class="card-title">Identificación del equipo</div>
+    </div>
+    <div class="card-body">
+      <div class="qr-zone">
+        <div class="qr-visual" id="qr-container">
+          <div class="qr-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/>
+            </svg>
+            <span>QR del equipo</span>
+          </div>
+        </div>
+        <div class="qr-data">
+          <div class="qr-code" id="edr-code">EDR-2025-000001</div>
+          <div class="qr-url" id="edr-url"></div>
+          <div class="qr-ref" id="fenoge-ref">FENOGE-CCE-001</div>
+          <button class="btn-qr-print" onclick="imprimirQR()">Imprimir etiqueta QR</button>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="field-grid">
+        <div>
+          <label class="field-label">Tipo de equipo <span class="req">*</span></label>
+          <select id="tipo-equipo" onchange="updateProgress()">
+            <option value="">Seleccionar…</option>
+            <option>Nevera doméstica</option>
+            <option>Refrigerador comercial</option>
+            <option>Aire acondicionado Split</option>
+            <option>Aire acondicionado ventana</option>
+            <option>Aire acondicionado central</option>
+            <option>Congelador</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Fecha de registro <span class="req">*</span></label>
+          <input type="date" id="fecha-reg" onchange="updateProgress()"/>
+        </div>
+        <div><label class="field-label">Marca</label><input type="text" id="marca" placeholder="LG, Samsung, Mabe…"/></div>
+        <div><label class="field-label">Modelo</label><input type="text" id="modelo" placeholder="Ej. GR-B247SLZB"/></div>
+        <div><label class="field-label">Serial / N.° de serie</label><input type="text" id="serial" placeholder="Serial o placa"/></div>
+        <div><label class="field-label">Año fabricación aprox.</label><input type="number" id="anio" placeholder="Ej. 2008" min="1970" max="2025"/></div>
+        <div><label class="field-label">Capacidad</label><input type="text" id="capacidad" placeholder="BTU o litros"/></div>
+        <div>
+          <label class="field-label">Tipo de refrigerante</label>
+          <select id="refrigerante">
+            <option value="">Seleccionar…</option>
+            <option>R-22 (HCFC)</option>
+            <option>R-134a (HFC)</option>
+            <option>R-410A (HFC)</option>
+            <option>R-600a (HC)</option>
+            <option>Desconocido</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Beneficiario -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num n-green">2</div>
+      <div class="card-title">Datos del beneficiario</div>
+    </div>
+    <div class="card-body">
+      <div class="field-grid g1">
+        <div>
+          <label class="field-label">Nombre completo <span class="req">*</span></label>
+          <input type="text" id="nombre-ben" placeholder="Nombre y apellidos" onchange="updateProgress()"/>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div>
+          <label class="field-label">Tipo de identificación</label>
+          <select id="tipo-doc">
+            <option>Cédula de ciudadanía</option>
+            <option>NIT</option>
+            <option>Cédula de extranjería</option>
+            <option>Pasaporte</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">N.° de identificación <span class="req">*</span></label>
+          <input type="text" id="doc-ben" placeholder="Número de documento" onchange="updateProgress()"/>
+        </div>
+        <div><label class="field-label">Teléfono</label><input type="tel" id="tel-ben" placeholder="+57 300 000 0000"/></div>
+        <div>
+          <label class="field-label">Municipio</label>
+          <select id="municipio">
+            <option value="">Seleccionar…</option>
+            <option>Barranquilla</option><option>Cartagena</option><option>Santa Marta</option>
+            <option>Montería</option><option>Valledupar</option><option>Riohacha</option>
+            <option>Sincelejo</option><option>Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-grid g1">
+        <div>
+          <label class="field-label">Dirección del domicilio <span class="req">*</span></label>
+          <input type="text" id="direccion" placeholder="Calle, carrera, barrio…" onchange="updateProgress()"/>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div>
+          <label class="field-label">Departamento</label>
+          <select id="departamento">
+            <option>Atlántico</option><option>Bolívar</option><option>Magdalena</option>
+            <option>Córdoba</option><option>Cesar</option><option>La Guajira</option><option>Sucre</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Estrato</label>
+          <select id="estrato">
+            <option value="">—</option>
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Fotos -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num n-purple">3</div>
+      <div class="card-title">Registro fotográfico</div>
+    </div>
+    <div class="card-body">
+      <div class="photos-meta">
+        <span class="photos-hint">4 fotos obligatorias · hasta 9 en total</span>
+        <span class="photo-counter pc-warn" id="photo-counter">0 / 9</span>
+      </div>
+      <div class="photo-grid">
+        <div class="photo-slot obl" id="ps0" onclick="openPhoto(0)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Vista frontal</span><span class="photo-slot-req">Obligatoria</span><button class="photo-del" onclick="removePhoto(event,0)">×</button></div>
+        <div class="photo-slot obl" id="ps1" onclick="openPhoto(1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Vista posterior</span><span class="photo-slot-req">Obligatoria</span><button class="photo-del" onclick="removePhoto(event,1)">×</button></div>
+        <div class="photo-slot obl" id="ps2" onclick="openPhoto(2)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Placa de serial</span><span class="photo-slot-req">Obligatoria</span><button class="photo-del" onclick="removePhoto(event,2)">×</button></div>
+        <div class="photo-slot obl" id="ps3" onclick="openPhoto(3)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Compresor</span><span class="photo-slot-req">Obligatoria</span><button class="photo-del" onclick="removePhoto(event,3)">×</button></div>
+        <div class="photo-slot" id="ps4" onclick="openPhoto(4)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Interior</span><button class="photo-del" onclick="removePhoto(event,4)">×</button></div>
+        <div class="photo-slot" id="ps5" onclick="openPhoto(5)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Daños visibles</span><button class="photo-del" onclick="removePhoto(event,5)">×</button></div>
+        <div class="photo-slot" id="ps6" onclick="openPhoto(6)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Equipo con QR</span><button class="photo-del" onclick="removePhoto(event,6)">×</button></div>
+        <div class="photo-slot" id="ps7" onclick="openPhoto(7)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">En sitio</span><button class="photo-del" onclick="removePhoto(event,7)">×</button></div>
+        <div class="photo-slot" id="ps8" onclick="openPhoto(8)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="photo-slot-lbl">Foto adicional</span><button class="photo-del" onclick="removePhoto(event,8)">×</button></div>
+      </div>
+      <p class="photo-note">JPG, PNG, HEIC · Máx. 10 MB por foto · Asegúrese que la placa de serial sea legible.</p>
+      <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleFile(event)"/>
+    </div>
+  </div>
+
+  <!-- 4. Estado -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num n-amber">4</div>
+      <div class="card-title">Estado del equipo al momento de recolección</div>
+    </div>
+    <div class="card-body">
+      <label class="field-label">Condición general <span class="req">*</span></label>
+      <div class="status-row" style="margin-bottom:12px;">
+        <div class="status-btn" onclick="setStatus(this,'good')"><span class="st-icon">✅</span><span class="st-label" style="color:#0F6E56;">Funcional</span><span class="st-sub">Opera normal</span></div>
+        <div class="status-btn" onclick="setStatus(this,'warn')"><span class="st-icon">⚠️</span><span class="st-label" style="color:#854F0B;">Con fallas</span><span class="st-sub">Fallas parciales</span></div>
+        <div class="status-btn" onclick="setStatus(this,'bad')"><span class="st-icon">🔴</span><span class="st-label" style="color:#A32D2D;">Inoperante</span><span class="st-sub">Sin funcionamiento</span></div>
+      </div>
+      <div class="field-grid">
+        <div>
+          <label class="field-label">Presencia de refrigerante</label>
+          <select id="ref-estado">
+            <option>Sin verificar</option>
+            <option>Sí — contiene refrigerante</option>
+            <option>No — refrigerante ausente</option>
+            <option>Fuga detectada</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Estado del compresor</label>
+          <select id="compresor">
+            <option>Sin evaluar</option><option>Bueno</option>
+            <option>Deteriorado</option><option>Dañado</option>
+          </select>
+        </div>
+      </div>
+      <label class="field-label">Observaciones / anomalías</label>
+      <textarea id="observaciones" placeholder="Descripción de daños, materiales peligrosos, cableado, etc."></textarea>
+    </div>
+  </div>
+
+  <!-- 5. Cadena de custodia -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-num n-teal">5</div>
+      <div class="card-title">Cadena de custodia</div>
+    </div>
+    <div class="card-body">
+      <div class="custody-step">
+        <div class="c-dot d-green"></div>
+        <div class="c-info">
+          <div class="c-stage">Recolección en sitio</div>
+          <div class="c-detail">Técnico responsable · Fecha y hora</div>
+          <div class="c-inputs">
+            <input type="text" id="tecnico" placeholder="Nombre del técnico"/>
+            <input type="datetime-local" id="fecha-recoleccion"/>
+          </div>
+        </div>
+      </div>
+      <div class="custody-step">
+        <div class="c-dot d-amber"></div>
+        <div class="c-info">
+          <div class="c-stage">Transporte / bodega temporal</div>
+          <div class="c-detail">Responsable · Placa del vehículo</div>
+          <div class="c-inputs">
+            <input type="text" id="responsable-log" placeholder="Responsable de logística"/>
+            <input type="text" id="placa" placeholder="Placa del vehículo"/>
+          </div>
+        </div>
+      </div>
+      <div class="custody-step">
+        <div class="c-dot d-blue"></div>
+        <div class="c-info">
+          <div class="c-stage">Entrega al gestor ambiental</div>
+          <div class="c-detail">N.° de manifiesto de residuos</div>
+          <div class="c-inputs">
+            <input type="text" id="manifiesto" placeholder="N.° manifiesto"/>
+            <input type="text" id="gestor" placeholder="Nombre del gestor ambiental"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div class="summary-card">
+    <div class="summary-title">Resumen del registro</div>
+    <div class="sum-row"><span class="sum-key">Proyecto</span><span class="sum-val">Caribe Cambia Tu Energía</span></div>
+    <div class="sum-row"><span class="sum-key">Entidad ejecutora</span><span class="sum-val">Air-e · FENOGE / BID</span></div>
+    <div class="sum-row"><span class="sum-key">ID del equipo</span><span class="sum-val" id="sum-id">EDR-2025-000001</span></div>
+    <div class="sum-row"><span class="sum-key">Fotos cargadas</span><span class="sum-val" id="sum-fotos">0 de 4 obligatorias</span></div>
+    <div class="sum-row"><span class="sum-key">Estado del equipo</span><span class="sum-val" id="sum-estado">Sin seleccionar</span></div>
+    <div class="sum-row"><span class="sum-key">Estado del registro</span><span class="sum-val" id="sum-reg" style="color:#854F0B;">Borrador</span></div>
+  </div>
+
+</div>
+
+<div class="action-bar">
+  <button class="btn btn-new" onclick="nuevoRegistro()">+ Nuevo</button>
+  <button class="btn btn-save" id="btn-guardar" onclick="guardar()">Enviar a base de datos</button>
+</div>
+
+<div class="sending-overlay" id="sending-overlay">
+  <div class="spinner"></div>
+  <div class="sending-text">Guardando en Google Sheets…</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- QR print area -->
+<div id="qr-print-area" style="display:none;text-align:center;padding:20px;">
+  <div style="border:2px solid #3B6D11;border-radius:12px;padding:16px;display:inline-block;max-width:200px;">
+    <div style="font-size:10px;font-weight:700;color:#3B6D11;margin-bottom:6px;">CARIBE CAMBIA TU ENERGÍA · Air-e</div>
+    <div id="qr-print-box"></div>
+    <div id="qr-print-id" style="font-family:monospace;font-size:12px;font-weight:700;margin-top:6px;"></div>
+    <div id="qr-print-ref" style="font-size:9px;color:#3B6D11;margin-top:2px;"></div>
+    <div style="font-size:8px;color:#888;margin-top:4px;">Escanee para registrar este equipo</div>
+  </div>
+</div>
+
+<script>
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyTyg0oiO551Mk2baOeHw-crRNei9WnzDxDWksjfBCtE5XJIRvaBU9nyI8_E_gNsTf/exec';
+  var photoData = {};
+  var photoCount = 0;
+  var currentSlot = 0;
+  var statusVal = '';
+  var currentQR = null;
+
+  // Lee el ID desde la URL si viene en el QR (?id=EDR-2025-XXXXXX)
+  function getIdFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get('id') || generarId();
+  }
+
+  function generarId() {
+    var n = Math.floor(Math.random() * 999999).toString().padStart(6,'0');
+    return 'EDR-2025-' + n;
+  }
+
+  function initForm() {
+    var id = getIdFromURL();
+    var ref = 'FENOGE-CCE-' + Math.floor(Math.random()*999).toString().padStart(3,'0');
+    var url = window.location.origin + window.location.pathname + '?id=' + id;
+
+    document.getElementById('edr-code').textContent = id;
+    document.getElementById('top-id').textContent = id;
+    document.getElementById('edr-url').textContent = url;
+    document.getElementById('fenoge-ref').textContent = ref;
+    document.getElementById('sum-id').textContent = id;
+    document.getElementById('fecha-reg').value = new Date().toISOString().split('T')[0];
+
+    // Generar QR
+    document.getElementById('qr-container').innerHTML = '';
+    try {
+      currentQR = new QRCode(document.getElementById('qr-container'), {
+        text: url,
+        width: 90,
+        height: 90,
+        colorDark: '#1a1a1a',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch(e) {}
+  }
+
+  function imprimirQR() {
+    var id = document.getElementById('edr-code').textContent;
+    var ref = document.getElementById('fenoge-ref').textContent;
+    var url = window.location.origin + window.location.pathname + '?id=' + id;
+    var printBox = document.getElementById('qr-print-box');
+    printBox.innerHTML = '';
+    new QRCode(printBox, { text: url, width: 150, height: 150, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M });
+    document.getElementById('qr-print-id').textContent = id;
+    document.getElementById('qr-print-ref').textContent = ref;
+    document.getElementById('qr-print-area').style.display = 'block';
+    setTimeout(function(){ window.print(); document.getElementById('qr-print-area').style.display = 'none'; }, 300);
+  }
+
+  function openPhoto(idx) {
+    if (photoData[idx]) return;
+    currentSlot = idx;
+    document.getElementById('file-input').click();
+  }
+
+  function handleFile(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var slot = document.getElementById('ps' + currentSlot);
+      photoData[currentSlot] = ev.target.result;
+      var img = document.createElement('img');
+      img.src = ev.target.result;
+      slot.insertBefore(img, slot.firstChild);
+      slot.classList.add('filled');
+      slot.classList.remove('obl');
+      photoCount++;
+      updatePhotoUI();
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }
+
+  function removePhoto(e, idx) {
+    e.stopPropagation();
+    var slot = document.getElementById('ps' + idx);
+    var img = slot.querySelector('img');
+    if (img) slot.removeChild(img);
+    slot.classList.remove('filled');
+    if (idx < 4) slot.classList.add('obl');
+    delete photoData[idx];
+    photoCount--;
+    slot.onclick = function() { openPhoto(idx); };
+    updatePhotoUI();
+  }
+
+  function updatePhotoUI() {
+    var c = document.getElementById('photo-counter');
+    c.textContent = photoCount + ' / 9';
+    c.className = 'photo-counter ' + (photoCount >= 4 ? 'pc-ok' : 'pc-warn');
+    var obl = Math.min(photoCount, 4);
+    document.getElementById('sum-fotos').textContent = obl + ' de 4 obligatorias' + (photoCount > 4 ? ' + ' + (photoCount-4) + ' adicionales' : '');
+    updateProgress();
+  }
+
+  function setStatus(el, type) {
+    document.querySelectorAll('.status-btn').forEach(function(b){ b.className = 'status-btn'; });
+    el.classList.add('sel-' + type);
+    statusVal = type;
+    var labels = { good:'Funcional', warn:'Con fallas', bad:'Inoperante' };
+    document.getElementById('sum-estado').textContent = labels[type];
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var fields = [
+      document.getElementById('tipo-equipo').value,
+      document.getElementById('fecha-reg').value,
+      document.getElementById('nombre-ben').value,
+      document.getElementById('doc-ben').value,
+      document.getElementById('direccion').value,
+      statusVal,
+      photoCount >= 4 ? 'ok' : ''
+    ];
+    var filled = fields.filter(function(f){ return f && f.length > 0; }).length;
+    document.getElementById('progress').style.width = Math.round((filled/fields.length)*100) + '%';
+  }
+
+  function showToast(msg, tipo) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + (tipo === 'err' ? 'toast-err' : 'toast-ok') + ' show';
+    setTimeout(function(){ t.classList.remove('show'); }, 3000);
+  }
+
+  function guardar() {
+    var id = document.getElementById('edr-code').textContent;
+    var nombre = document.getElementById('nombre-ben').value.trim();
+    var doc = document.getElementById('doc-ben').value.trim();
+    var tipo = document.getElementById('tipo-equipo').value;
+    var direccion = document.getElementById('direccion').value.trim();
+
+    if (!tipo || !nombre || !doc || !direccion || !statusVal) {
+      showToast('Complete los campos obligatorios antes de enviar', 'err');
+      return;
+    }
+
+    var datos = {
+      id: id,
+      fecha: document.getElementById('fecha-reg').value,
+      tipoEquipo: tipo,
+      marca: document.getElementById('marca').value,
+      modelo: document.getElementById('modelo').value,
+      serial: document.getElementById('serial').value,
+      anio: document.getElementById('anio').value,
+      refrigerante: document.getElementById('refrigerante').value,
+      nombreBeneficiario: nombre,
+      documento: doc,
+      telefono: document.getElementById('tel-ben').value,
+      municipio: document.getElementById('municipio').value,
+      direccion: direccion,
+      condicion: statusVal,
+      refrigeranteEstado: document.getElementById('ref-estado').value,
+      compresor: document.getElementById('compresor').value,
+      observaciones: document.getElementById('observaciones').value,
+      tecnico: document.getElementById('tecnico').value,
+      placaVehiculo: document.getElementById('placa').value,
+      numManifiesto: document.getElementById('manifiesto').value,
+      gestorAmbiental: document.getElementById('gestor').value
+    };
+
+    document.getElementById('sending-overlay').classList.add('show');
+    document.getElementById('btn-guardar').disabled = true;
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos)
+    })
+    .then(function() {
+      document.getElementById('sending-overlay').classList.remove('show');
+      document.getElementById('btn-guardar').disabled = false;
+      var s = document.getElementById('sum-reg');
+      s.textContent = 'Enviado ✓';
+      s.style.color = '#0F6E56';
+      showToast('Registro guardado en Google Sheets ✓', 'ok');
+    })
+    .catch(function(err) {
+      document.getElementById('sending-overlay').classList.remove('show');
+      document.getElementById('btn-guardar').disabled = false;
+      showToast('Error de conexión. Intente de nuevo.', 'err');
+    });
+  }
+
+  function nuevoRegistro() {
+    if (!confirm('¿Crear un nuevo registro? Los datos actuales no guardados se perderán.')) return;
+    window.location.href = window.location.pathname;
+  }
+
+  // Inicializar
+  initForm();
+</script>
+</body>
+</html>
