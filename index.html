@@ -13,7 +13,7 @@
     --amber-50:#FAEEDA;--amber-400:#EF9F27;--amber-600:#854F0B;
     --red-50:#FCEBEB;--red-400:#E24B4A;--red-600:#A32D2D;
     --purple-50:#EEEDFE;--purple-600:#534AB7;
-    --gray-100:#D3D1C7;--gray-400:#888780;--gray-600:#5F5E5A;
+    --gray-400:#888780;
     --text:#1a1a1a;--text-muted:#5a5a5a;--text-hint:#8a8a8a;
     --bg:#ffffff;--bg-secondary:#f7f6f2;--bg-page:#f0ede6;
     --border:rgba(0,0,0,0.12);--border-strong:rgba(0,0,0,0.22);
@@ -23,6 +23,7 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   body{background:var(--bg-page);font-family:var(--font);color:var(--text);min-height:100vh;}
 
+  /* Topbar */
   .topbar{background:var(--green-600);color:white;padding:12px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
   .topbar-left{display:flex;align-items:center;gap:10px;}
   .topbar-icon{width:32px;height:32px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;}
@@ -34,6 +35,7 @@
 
   .main{padding:12px 12px 120px;max-width:600px;margin:0 auto;}
 
+  /* Cards */
   .card{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border);margin-bottom:12px;overflow:hidden;}
   .card-header{padding:12px 14px 10px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;}
   .card-num{width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -46,18 +48,31 @@
   .card-title{font-size:13px;font-weight:600;color:var(--text);}
   .card-body{padding:14px;}
 
-  .qr-zone{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
-  .qr-visual{width:90px;height:90px;border:1.5px solid var(--border-strong);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;background:white;flex-shrink:0;overflow:hidden;}
-  .qr-visual canvas, .qr-visual img{width:90px!important;height:90px!important;}
-  .qr-placeholder{display:flex;flex-direction:column;align-items:center;gap:4px;}
-  .qr-placeholder svg{width:28px;height:28px;opacity:0.3;}
-  .qr-placeholder span{font-size:9px;color:var(--text-hint);}
-  .qr-data{flex:1;min-width:0;}
-  .qr-code{font-family:monospace;font-size:16px;font-weight:700;color:var(--text);}
-  .qr-url{font-family:monospace;font-size:10px;color:var(--blue-600);word-break:break-all;margin-top:3px;}
-  .qr-ref{display:inline-block;margin-top:6px;background:var(--green-50);color:var(--green-600);font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;font-family:monospace;}
-  .btn-qr-print{margin-top:8px;font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;border:0.5px solid var(--blue-400);background:var(--blue-50);color:var(--blue-600);cursor:pointer;font-family:var(--font);}
+  /* Already registered banner */
+  .registered-banner{background:var(--amber-50);border:1.5px solid var(--amber-400);border-radius:var(--radius-lg);padding:16px;margin-bottom:12px;display:none;}
+  .registered-banner.show{display:block;}
+  .rb-title{font-size:14px;font-weight:700;color:var(--amber-600);margin-bottom:4px;}
+  .rb-sub{font-size:12px;color:var(--amber-600);margin-bottom:12px;}
+  .rb-data{background:white;border-radius:var(--radius);padding:12px;}
+  .rb-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--border);font-size:12px;}
+  .rb-row:last-child{border-bottom:none;}
+  .rb-key{color:var(--text-muted);}
+  .rb-val{font-weight:600;color:var(--text);text-align:right;max-width:60%;}
 
+  /* QR result (shown after save) */
+  .qr-result{background:var(--green-50);border:1.5px solid var(--green-100);border-radius:var(--radius-lg);padding:16px;margin-bottom:12px;display:none;text-align:center;}
+  .qr-result.show{display:block;}
+  .qr-result-title{font-size:13px;font-weight:700;color:var(--green-600);margin-bottom:12px;}
+  .qr-result-box{display:inline-block;background:white;border:1.5px solid var(--green-600);border-radius:10px;padding:14px;}
+  .qr-result-header{font-size:8px;font-weight:700;color:var(--green-600);text-align:center;margin-bottom:8px;letter-spacing:0.04em;}
+  .qr-canvas{width:140px;height:140px;margin:0 auto;}
+  .qr-canvas canvas,.qr-canvas img{width:140px!important;height:140px!important;}
+  .qr-result-id{font-family:monospace;font-size:13px;font-weight:700;color:var(--text);margin-top:8px;}
+  .qr-result-sub{font-size:9px;color:var(--text-muted);margin-top:2px;}
+  .btn-print-qr{margin-top:12px;font-family:var(--font);font-size:13px;font-weight:600;padding:10px 20px;border-radius:var(--radius);border:none;background:var(--green-600);color:white;cursor:pointer;width:100%;}
+  .btn-print-qr:active{background:var(--green-700);}
+
+  /* Form fields */
   .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
   .field-grid.g1{grid-template-columns:1fr;}
   .field-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:0.03em;}
@@ -72,7 +87,9 @@
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal-400);background:white;}
   textarea{min-height:72px;resize:vertical;}
   select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+  input:disabled,select:disabled,textarea:disabled{opacity:0.6;cursor:not-allowed;}
 
+  /* Status */
   .status-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
   .status-btn{border:1.5px solid var(--border-strong);border-radius:var(--radius);padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.15s;background:var(--bg-secondary);}
   .status-btn .st-icon{font-size:18px;display:block;margin-bottom:3px;}
@@ -81,7 +98,9 @@
   .status-btn.sel-good{border-color:var(--teal-400);background:var(--teal-50);}
   .status-btn.sel-warn{border-color:var(--amber-400);background:var(--amber-50);}
   .status-btn.sel-bad{border-color:var(--red-400);background:var(--red-50);}
+  .status-btn.disabled{opacity:0.5;pointer-events:none;}
 
+  /* Photos */
   .photos-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
   .photos-hint{font-size:11px;color:var(--text-hint);}
   .photo-counter{font-size:11px;font-weight:600;padding:2px 8px;border-radius:5px;}
@@ -99,6 +118,7 @@
   .photo-note{font-size:11px;color:var(--text-hint);margin-top:8px;padding:8px 10px;background:var(--bg-secondary);border-radius:var(--radius);border-left:2px solid var(--teal-400);line-height:1.5;}
   input[type=file]{display:none;}
 
+  /* Custody */
   .custody-step{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);}
   .custody-step:last-child{border-bottom:none;}
   .c-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;}
@@ -111,6 +131,7 @@
   .c-inputs{display:flex;flex-direction:column;gap:5px;}
   .c-inputs input{font-size:12px;padding:7px 10px;}
 
+  /* Summary */
   .summary-card{background:var(--green-50);border:0.5px solid var(--green-100);border-radius:var(--radius-lg);padding:14px;margin-bottom:12px;}
   .summary-title{font-size:11px;font-weight:700;color:var(--green-600);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;}
   .sum-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--green-100);}
@@ -118,26 +139,31 @@
   .sum-key{font-size:12px;color:var(--text-muted);}
   .sum-val{font-size:12px;font-weight:600;color:var(--text);}
 
+  /* Action bar */
   .action-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:0.5px solid var(--border);padding:10px 16px;display:flex;gap:8px;justify-content:flex-end;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,0.08);}
   .btn{font-family:var(--font);font-size:13px;font-weight:600;padding:10px 16px;border-radius:var(--radius);border:none;cursor:pointer;transition:all 0.15s;}
-  .btn-save{background:var(--green-600);color:white;flex:1;max-width:200px;}
+  .btn-save{background:var(--green-600);color:white;flex:1;max-width:220px;}
   .btn-save:disabled{background:var(--gray-400);cursor:not-allowed;}
   .btn-save:active:not(:disabled){background:var(--green-700);transform:scale(0.98);}
   .btn-new{background:var(--bg-secondary);color:var(--text-muted);border:0.5px solid var(--border-strong)!important;}
 
-  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);font-size:13px;font-weight:500;padding:10px 18px;border-radius:20px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:200;white-space:nowrap;}
+  /* Overlays */
+  .overlay{position:fixed;inset:0;background:rgba(255,255,255,0.9);display:none;align-items:center;justify-content:center;z-index:300;flex-direction:column;gap:12px;}
+  .overlay.show{display:flex;}
+  .spinner{width:40px;height:40px;border:3px solid var(--green-100);border-top-color:var(--green-600);border-radius:50%;animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .overlay-text{font-size:14px;font-weight:600;color:var(--green-600);}
+
+  /* Toast */
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);font-size:13px;font-weight:500;padding:10px 18px;border-radius:20px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:400;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   .toast-ok{background:#1a1a1a;color:white;}
   .toast-err{background:var(--red-600);color:white;}
+  .toast-warn{background:var(--amber-600);color:white;}
 
   .divider{height:0.5px;background:var(--border);margin:12px 0;}
-  .sending-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.85);display:none;align-items:center;justify-content:center;z-index:300;flex-direction:column;gap:12px;}
-  .sending-overlay.show{display:flex;}
-  .spinner{width:36px;height:36px;border:3px solid var(--green-100);border-top-color:var(--green-600);border-radius:50%;animation:spin 0.8s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .sending-text{font-size:14px;font-weight:600;color:var(--green-600);}
 
-  /* QR Print */
+  /* Print */
   @media print{
     body *{visibility:hidden;}
     #qr-print-area,#qr-print-area *{visibility:visible;}
@@ -163,48 +189,51 @@
       <div class="topbar-sub">Caribe Cambia Tu Energía · Air-e</div>
     </div>
   </div>
-  <div class="topbar-id" id="top-id">EDR-2025-000001</div>
+  <div class="topbar-id" id="top-id">Cargando…</div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
 
 <div class="main">
 
+  <!-- Banner: ya registrado -->
+  <div class="registered-banner" id="registered-banner">
+    <div class="rb-title">⚠️ Este equipo ya fue registrado</div>
+    <div class="rb-sub">No se puede diligenciar dos veces. Aquí están los datos guardados:</div>
+    <div class="rb-data" id="rb-data"></div>
+  </div>
+
+  <!-- QR generado tras guardar -->
+  <div class="qr-result" id="qr-result">
+    <div class="qr-result-title">✅ Registro guardado — Escanee o imprima este QR</div>
+    <div class="qr-result-box">
+      <div class="qr-result-header">CARIBE CAMBIA TU ENERGÍA · Air-e · FENOGE / BID</div>
+      <div class="qr-canvas" id="qr-canvas"></div>
+      <div class="qr-result-id" id="qr-result-id"></div>
+      <div class="qr-result-sub">Equipo de refrigeración EDR</div>
+      <div class="qr-result-sub">Escanee para ver este registro</div>
+    </div>
+    <button class="btn-print-qr" onclick="imprimirQR()">Imprimir etiqueta QR</button>
+  </div>
+
   <!-- 1. Identificación -->
-  <div class="card">
+  <div class="card" id="card-form">
     <div class="card-header">
       <div class="card-num n-blue">1</div>
       <div class="card-title">Identificación del equipo</div>
     </div>
     <div class="card-body">
-      <div class="qr-zone">
-        <div class="qr-visual" id="qr-container">
-          <div class="qr-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-              <rect x="3" y="14" width="7" height="7" rx="1"/>
-              <path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/>
-            </svg>
-            <span>QR del equipo</span>
-          </div>
-        </div>
-        <div class="qr-data">
-          <div class="qr-code" id="edr-code">EDR-2025-000001</div>
-          <div class="qr-url" id="edr-url"></div>
-          <div class="qr-ref" id="fenoge-ref">FENOGE-CCE-001</div>
-          <button class="btn-qr-print" onclick="imprimirQR()">Imprimir etiqueta QR</button>
-        </div>
+      <div style="background:var(--bg-secondary);border-radius:var(--radius);padding:10px 12px;margin-bottom:14px;">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:2px;">ID del equipo</div>
+        <div style="font-family:monospace;font-size:16px;font-weight:700;" id="edr-code">—</div>
+        <div style="font-size:10px;color:var(--text-hint);margin-top:2px;">El QR se generará automáticamente al guardar el registro</div>
       </div>
-      <div class="divider"></div>
       <div class="field-grid">
         <div>
           <label class="field-label">Tipo de equipo <span class="req">*</span></label>
           <select id="tipo-equipo" onchange="updateProgress()">
             <option value="">Seleccionar…</option>
-            <option>Nevera doméstica</option>
-            <option>Refrigerador comercial</option>
-            <option>Aire acondicionado Split</option>
-            <option>Aire acondicionado ventana</option>
-            <option>Aire acondicionado central</option>
+            <option>Nevera</option>
+            <option>Aire acondicionado</option>
             <option>Congelador</option>
           </select>
         </div>
@@ -215,7 +244,7 @@
         <div><label class="field-label">Marca</label><input type="text" id="marca" placeholder="LG, Samsung, Mabe…"/></div>
         <div><label class="field-label">Modelo</label><input type="text" id="modelo" placeholder="Ej. GR-B247SLZB"/></div>
         <div><label class="field-label">Serial / N.° de serie</label><input type="text" id="serial" placeholder="Serial o placa"/></div>
-        <div><label class="field-label">Año fabricación aprox.</label><input type="number" id="anio" placeholder="Ej. 2008" min="1970" max="2025"/></div>
+        <div><label class="field-label">Año fabricación aprox.</label><input type="number" id="anio" placeholder="Ej. 2008" min="1970" max="2026"/></div>
         <div><label class="field-label">Capacidad</label><input type="text" id="capacidad" placeholder="BTU o litros"/></div>
         <div>
           <label class="field-label">Tipo de refrigerante</label>
@@ -331,7 +360,7 @@
     </div>
     <div class="card-body">
       <label class="field-label">Condición general <span class="req">*</span></label>
-      <div class="status-row" style="margin-bottom:12px;">
+      <div class="status-row" style="margin-bottom:12px;" id="status-row">
         <div class="status-btn" onclick="setStatus(this,'good')"><span class="st-icon">✅</span><span class="st-label" style="color:#0F6E56;">Funcional</span><span class="st-sub">Opera normal</span></div>
         <div class="status-btn" onclick="setStatus(this,'warn')"><span class="st-icon">⚠️</span><span class="st-label" style="color:#854F0B;">Con fallas</span><span class="st-sub">Fallas parciales</span></div>
         <div class="status-btn" onclick="setStatus(this,'bad')"><span class="st-icon">🔴</span><span class="st-label" style="color:#A32D2D;">Inoperante</span><span class="st-sub">Sin funcionamiento</span></div>
@@ -407,7 +436,7 @@
     <div class="summary-title">Resumen del registro</div>
     <div class="sum-row"><span class="sum-key">Proyecto</span><span class="sum-val">Caribe Cambia Tu Energía</span></div>
     <div class="sum-row"><span class="sum-key">Entidad ejecutora</span><span class="sum-val">Air-e · FENOGE / BID</span></div>
-    <div class="sum-row"><span class="sum-key">ID del equipo</span><span class="sum-val" id="sum-id">EDR-2025-000001</span></div>
+    <div class="sum-row"><span class="sum-key">ID del equipo</span><span class="sum-val" id="sum-id">—</span></div>
     <div class="sum-row"><span class="sum-key">Fotos cargadas</span><span class="sum-val" id="sum-fotos">0 de 4 obligatorias</span></div>
     <div class="sum-row"><span class="sum-key">Estado del equipo</span><span class="sum-val" id="sum-estado">Sin seleccionar</span></div>
     <div class="sum-row"><span class="sum-key">Estado del registro</span><span class="sum-val" id="sum-reg" style="color:#854F0B;">Borrador</span></div>
@@ -415,89 +444,140 @@
 
 </div>
 
-<div class="action-bar">
+<div class="action-bar" id="action-bar">
   <button class="btn btn-new" onclick="nuevoRegistro()">+ Nuevo</button>
-  <button class="btn btn-save" id="btn-guardar" onclick="guardar()">Enviar a base de datos</button>
+  <button class="btn btn-save" id="btn-guardar" onclick="guardar()">Guardar y generar QR</button>
 </div>
 
-<div class="sending-overlay" id="sending-overlay">
+<div class="overlay" id="overlay-loading">
   <div class="spinner"></div>
-  <div class="sending-text">Guardando en Google Sheets…</div>
+  <div class="overlay-text" id="overlay-text">Verificando equipo…</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- QR print area -->
 <div id="qr-print-area" style="display:none;text-align:center;padding:20px;">
   <div style="border:2px solid #3B6D11;border-radius:12px;padding:16px;display:inline-block;max-width:200px;">
-    <div style="font-size:10px;font-weight:700;color:#3B6D11;margin-bottom:6px;">CARIBE CAMBIA TU ENERGÍA · Air-e</div>
+    <div style="font-size:9px;font-weight:700;color:#3B6D11;margin-bottom:8px;">CARIBE CAMBIA TU ENERGÍA · Air-e · FENOGE / BID</div>
     <div id="qr-print-box"></div>
     <div id="qr-print-id" style="font-family:monospace;font-size:12px;font-weight:700;margin-top:6px;"></div>
-    <div id="qr-print-ref" style="font-size:9px;color:#3B6D11;margin-top:2px;"></div>
-    <div style="font-size:8px;color:#888;margin-top:4px;">Escanee para registrar este equipo</div>
+    <div style="font-size:8px;color:#888;margin-top:3px;">Equipo de refrigeración EDR</div>
+    <div style="font-size:8px;color:#3B6D11;margin-top:2px;font-weight:600;">Escanee para ver este registro</div>
   </div>
 </div>
 
 <script>
-  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyTyg0oiO551Mk2baOeHw-crRNei9WnzDxDWksjfBCtE5XJIRvaBU9nyI8_E_gNsTf/exec';
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTYLP_6vgwDAIASPOdKzPQF-xugcLngkasqQT_aiLhOdoYnG-L_ubmsb31xdA1ngKu/exec';
   var photoData = {};
   var photoCount = 0;
   var currentSlot = 0;
   var statusVal = '';
-  var currentQR = null;
+  var edrId = '';
+  var yaGuardado = false;
 
-  // Lee el ID desde la URL si viene en el QR (?id=EDR-2025-XXXXXX)
   function getIdFromURL() {
     var params = new URLSearchParams(window.location.search);
-    return params.get('id') || generarId();
+    return params.get('id') || '';
   }
 
-  function generarId() {
-    var n = Math.floor(Math.random() * 999999).toString().padStart(6,'0');
-    return 'EDR-2025-' + n;
+  function showToast(msg, tipo) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + (tipo === 'err' ? 'toast-err' : tipo === 'warn' ? 'toast-warn' : 'toast-ok') + ' show';
+    setTimeout(function(){ t.classList.remove('show'); }, 3500);
+  }
+
+  function setOverlay(show, texto) {
+    var o = document.getElementById('overlay-loading');
+    document.getElementById('overlay-text').textContent = texto || 'Cargando…';
+    o.classList.toggle('show', show);
   }
 
   function initForm() {
-    var id = getIdFromURL();
-    var ref = 'FENOGE-CCE-' + Math.floor(Math.random()*999).toString().padStart(3,'0');
-    var url = window.location.origin + window.location.pathname + '?id=' + id;
-
-    document.getElementById('edr-code').textContent = id;
-    document.getElementById('top-id').textContent = id;
-    document.getElementById('edr-url').textContent = url;
-    document.getElementById('fenoge-ref').textContent = ref;
-    document.getElementById('sum-id').textContent = id;
+    edrId = getIdFromURL();
+    if (!edrId) {
+      document.getElementById('edr-code').textContent = 'ID no encontrado';
+      document.getElementById('top-id').textContent = 'Sin ID';
+      showToast('No se encontró el ID del equipo en la URL', 'err');
+      return;
+    }
+    document.getElementById('edr-code').textContent = edrId;
+    document.getElementById('top-id').textContent = edrId;
+    document.getElementById('sum-id').textContent = edrId;
     document.getElementById('fecha-reg').value = new Date().toISOString().split('T')[0];
 
-    // Generar QR
-    document.getElementById('qr-container').innerHTML = '';
-    try {
-      currentQR = new QRCode(document.getElementById('qr-container'), {
-        text: url,
-        width: 90,
-        height: 90,
-        colorDark: '#1a1a1a',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
+    // Verificar si ya existe en Sheets
+    setOverlay(true, 'Verificando equipo…');
+    fetch(APPS_SCRIPT_URL + '?id=' + edrId)
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        setOverlay(false);
+        if (data.resultado === 'encontrado') {
+          mostrarYaRegistrado(data.datos);
+        }
+      })
+      .catch(function() {
+        setOverlay(false);
+        // Si no hay internet, permitir diligenciar igual
       });
-    } catch(e) {}
   }
 
-  function imprimirQR() {
-    var id = document.getElementById('edr-code').textContent;
-    var ref = document.getElementById('fenoge-ref').textContent;
+  function mostrarYaRegistrado(datos) {
+    yaGuardado = true;
+    var banner = document.getElementById('registered-banner');
+    banner.classList.add('show');
+
+    var campos = [
+      ['Tipo de equipo', 'Tipo equipo'],
+      ['Beneficiario', 'Nombre beneficiario'],
+      ['Documento', 'Documento'],
+      ['Municipio', 'Municipio'],
+      ['Dirección', 'Dirección'],
+      ['Condición', 'Condición'],
+      ['Técnico', 'Técnico'],
+      ['Fecha registro', 'Fecha']
+    ];
+
+    var html = '';
+    campos.forEach(function(c) {
+      var val = datos[c[1]] || datos[c[0]] || '—';
+      if (val && val !== '—') {
+        html += '<div class="rb-row"><span class="rb-key">' + c[0] + '</span><span class="rb-val">' + val + '</span></div>';
+      }
+    });
+    document.getElementById('rb-data').innerHTML = html;
+
+    // Deshabilitar formulario
+    document.querySelectorAll('input, select, textarea').forEach(function(el){ el.disabled = true; });
+    document.querySelectorAll('.status-btn').forEach(function(b){ b.classList.add('disabled'); });
+    document.querySelectorAll('.photo-slot').forEach(function(s){ s.onclick = null; });
+    document.getElementById('btn-guardar').disabled = true;
+    document.getElementById('btn-guardar').textContent = 'Ya registrado';
+
+    // Mostrar QR del equipo existente
+    mostrarQR(edrId);
+    showToast('Este equipo ya fue registrado anteriormente', 'warn');
+  }
+
+  function mostrarQR(id) {
     var url = window.location.origin + window.location.pathname + '?id=' + id;
-    var printBox = document.getElementById('qr-print-box');
-    printBox.innerHTML = '';
-    new QRCode(printBox, { text: url, width: 150, height: 150, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M });
-    document.getElementById('qr-print-id').textContent = id;
-    document.getElementById('qr-print-ref').textContent = ref;
-    document.getElementById('qr-print-area').style.display = 'block';
-    setTimeout(function(){ window.print(); document.getElementById('qr-print-area').style.display = 'none'; }, 300);
+    var qrResult = document.getElementById('qr-result');
+    var canvas = document.getElementById('qr-canvas');
+    canvas.innerHTML = '';
+    try {
+      new QRCode(canvas, {
+        text: url, width: 140, height: 140,
+        colorDark: '#000000', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch(e){}
+    document.getElementById('qr-result-id').textContent = id;
+    qrResult.classList.add('show');
+    qrResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function openPhoto(idx) {
-    if (photoData[idx]) return;
+    if (photoData[idx] || yaGuardado) return;
     currentSlot = idx;
     document.getElementById('file-input').click();
   }
@@ -523,6 +603,7 @@
 
   function removePhoto(e, idx) {
     e.stopPropagation();
+    if (yaGuardado) return;
     var slot = document.getElementById('ps' + idx);
     var img = slot.querySelector('img');
     if (img) slot.removeChild(img);
@@ -539,11 +620,12 @@
     c.textContent = photoCount + ' / 9';
     c.className = 'photo-counter ' + (photoCount >= 4 ? 'pc-ok' : 'pc-warn');
     var obl = Math.min(photoCount, 4);
-    document.getElementById('sum-fotos').textContent = obl + ' de 4 obligatorias' + (photoCount > 4 ? ' + ' + (photoCount-4) + ' adicionales' : '');
+    document.getElementById('sum-fotos').textContent = obl + ' de 4 obligatorias' + (photoCount > 4 ? ' + ' + (photoCount - 4) + ' adicionales' : '');
     updateProgress();
   }
 
   function setStatus(el, type) {
+    if (yaGuardado) return;
     document.querySelectorAll('.status-btn').forEach(function(b){ b.className = 'status-btn'; });
     el.classList.add('sel-' + type);
     statusVal = type;
@@ -563,30 +645,23 @@
       photoCount >= 4 ? 'ok' : ''
     ];
     var filled = fields.filter(function(f){ return f && f.length > 0; }).length;
-    document.getElementById('progress').style.width = Math.round((filled/fields.length)*100) + '%';
-  }
-
-  function showToast(msg, tipo) {
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast ' + (tipo === 'err' ? 'toast-err' : 'toast-ok') + ' show';
-    setTimeout(function(){ t.classList.remove('show'); }, 3000);
+    document.getElementById('progress').style.width = Math.round((filled / fields.length) * 100) + '%';
   }
 
   function guardar() {
-    var id = document.getElementById('edr-code').textContent;
+    if (yaGuardado) return;
     var nombre = document.getElementById('nombre-ben').value.trim();
     var doc = document.getElementById('doc-ben').value.trim();
     var tipo = document.getElementById('tipo-equipo').value;
     var direccion = document.getElementById('direccion').value.trim();
 
     if (!tipo || !nombre || !doc || !direccion || !statusVal) {
-      showToast('Complete los campos obligatorios antes de enviar', 'err');
+      showToast('Complete los campos obligatorios antes de guardar', 'err');
       return;
     }
 
     var datos = {
-      id: id,
+      id: edrId,
       fecha: document.getElementById('fecha-reg').value,
       tipoEquipo: tipo,
       marca: document.getElementById('marca').value,
@@ -609,7 +684,7 @@
       gestorAmbiental: document.getElementById('gestor').value
     };
 
-    document.getElementById('sending-overlay').classList.add('show');
+    setOverlay(true, 'Guardando en Google Sheets…');
     document.getElementById('btn-guardar').disabled = true;
 
     fetch(APPS_SCRIPT_URL, {
@@ -619,26 +694,41 @@
       body: JSON.stringify(datos)
     })
     .then(function() {
-      document.getElementById('sending-overlay').classList.remove('show');
-      document.getElementById('btn-guardar').disabled = false;
+      setOverlay(false);
+      yaGuardado = true;
       var s = document.getElementById('sum-reg');
-      s.textContent = 'Enviado ✓';
+      s.textContent = 'Guardado ✓';
       s.style.color = '#0F6E56';
-      showToast('Registro guardado en Google Sheets ✓', 'ok');
+      document.getElementById('btn-guardar').textContent = 'Guardado ✓';
+      // Deshabilitar formulario
+      document.querySelectorAll('input, select, textarea').forEach(function(el){ el.disabled = true; });
+      document.querySelectorAll('.status-btn').forEach(function(b){ b.classList.add('disabled'); });
+      // Mostrar QR
+      mostrarQR(edrId);
+      showToast('Registro guardado. ¡Ya puede imprimir el QR!', 'ok');
     })
-    .catch(function(err) {
-      document.getElementById('sending-overlay').classList.remove('show');
+    .catch(function() {
+      setOverlay(false);
       document.getElementById('btn-guardar').disabled = false;
       showToast('Error de conexión. Intente de nuevo.', 'err');
     });
   }
 
+  function imprimirQR() {
+    var printBox = document.getElementById('qr-print-box');
+    var url = window.location.origin + window.location.pathname + '?id=' + edrId;
+    printBox.innerHTML = '';
+    new QRCode(printBox, { text: url, width: 160, height: 160, colorDark:'#000', colorLight:'#fff', correctLevel: QRCode.CorrectLevel.M });
+    document.getElementById('qr-print-id').textContent = edrId;
+    document.getElementById('qr-print-area').style.display = 'block';
+    setTimeout(function(){ window.print(); document.getElementById('qr-print-area').style.display = 'none'; }, 400);
+  }
+
   function nuevoRegistro() {
-    if (!confirm('¿Crear un nuevo registro? Los datos actuales no guardados se perderán.')) return;
+    if (!yaGuardado && !confirm('¿Crear un nuevo registro? Los datos no guardados se perderán.')) return;
     window.location.href = window.location.pathname;
   }
 
-  // Inicializar
   initForm();
 </script>
 </body>
