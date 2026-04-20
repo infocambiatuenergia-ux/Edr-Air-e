@@ -735,42 +735,35 @@ function guardar(){
   datosParaGuardar.fotos = []; // No guardar fotos en localStorage (muy pesado)
   try { localStorage.setItem('EDR_'+edrId, JSON.stringify(datosParaGuardar)); } catch(e){}
 
-  // Enviar al servidor con no-cors (limitación de Apps Script público)
-  fetch(APPS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(datos)})
-    .then(function(){
-      setOverlay(false);
-      yaGuardado=true;
-      var s=document.getElementById('sum-reg');
-      s.textContent='Guardado ✓'; s.style.color='#0F6E56';
-      bloquearYOcultar();
-      mostrarVistaGuardada(datos);
-      mostrarQR(edrId,'');
-      showToast('¡Registro guardado y bloqueado! 🔒','ok');
-    })
-    .catch(function(){
-      setOverlay(false);
-      document.getElementById('btn-guardar').disabled=false;
-      showToast('Error de conexión. Intente de nuevo.','err');
-    });
-}
+  // Enviar datos via formulario oculto (evita problema CORS con Apps Script)
+  var iframe=document.createElement('iframe');
+  iframe.name='hidden_frame';
+  iframe.style.display='none';
+  document.body.appendChild(iframe);
 
-function imprimirQR(){
-  var url=BASE_URL+'?id='+edrId;
-  var pb=document.getElementById('qr-print-box');
-  pb.innerHTML='';
-  new QRCode(pb,{text:url,width:160,height:160,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
-  document.getElementById('qr-print-id').textContent=edrId;
-  document.getElementById('qr-print-area').style.display='block';
-  setTimeout(function(){window.print();document.getElementById('qr-print-area').style.display='none';},400);
-}
+  var form=document.createElement('form');
+  form.method='POST';
+  form.action=APPS_URL;
+  form.target='hidden_frame';
+  form.style.display='none';
 
-function nuevoRegistro(){
-  if(!yaGuardado&&!confirm('¿Crear un nuevo registro? Los datos no guardados se perderán.')) return;
-  // Al crear nuevo, ir a la ruta base sin ?id= para que se genere uno nuevo
-  window.location.href=window.location.pathname;
-}
+  var input=document.createElement('input');
+  input.type='hidden';
+  input.name='datos';
+  input.value=JSON.stringify(datos);
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
 
-initForm();
-</script>
-</body>
-</html>
+  setTimeout(function(){
+    try{document.body.removeChild(form);}catch(e){}
+    try{document.body.removeChild(iframe);}catch(e){}
+    setOverlay(false);
+    yaGuardado=true;
+    var s=document.getElementById('sum-reg');
+    s.textContent='Guardado ✓'; s.style.color='#0F6E56';
+    bloquearYOcultar();
+    mostrarVistaGuardada(datos);
+    mostrarQR(edrId,'');
+    showToast('¡Registro guardado y bloqueado! 🔒','ok');
+  },3000);
